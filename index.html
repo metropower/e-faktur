@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Pembuatan Faktur Pajak Coretax</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+        }
+        .navbar {
+            background-color: #0056b3; /* Warna biru tua khas pajak */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #ffffff !important;
+            font-size: 1.5rem;
+        }
+        .navbar-brand i {
+            margin-right: 10px;
+        }
+        .tutorial-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .step {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 3px solid #007bff; /* Warna biru cerah untuk aksen */
+        }
+        .step-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0056b3;
+            margin-right: 20px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #343a40;
+        }
+        .step-content {
+            display: none; /* Initially hidden */
+            padding-top: 20px;
+            border-top: 1px dashed #ced4da;
+            margin-top: 15px;
+        }
+        .step-content p {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+        .step-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+         .step-content img:hover {
+            transform: scale(1.03);
+        }
+        .important-note {
+            background-color: #fff3cd; /* Kuning muda untuk perhatian */
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 5px solid #ffc107; /* Kuning */
+            font-size: 0.95rem;
+        }
+        .important-note i {
+            margin-right: 10px;
+        }
+         .action-button {
+            background-color: #28a745; /* Hijau untuk aksi */
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        .action-button:hover {
+            background-color: #218838;
+        }
+        .info-button {
+            background-color: #17a2b8; /* Biru muda info */
+            color: white;
+        }
+         .info-button:hover {
+            background-color: #138496;
+        }
+         .warning-button {
+            background-color: #ffc107; /* Kuning warning */
+            color: #212529;
+        }
+        .warning-button:hover {
+            background-color: #e0a800;
+        }
+         .highlight {
+            background-color: rgba(0, 123, 255, 0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #0056b3;
+        }
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1050;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            animation-name: zoomIn;
+            animation-duration: 0.3s;
+        }
+         @keyframes zoomIn {
+            from {transform: scale(0.8); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+        .modal-header {
+            padding: 15px 20px;
+            background-color: #0056b3;
+            color: white;
+            border-bottom: 1px solid #dee2e6;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+        .modal-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .close-button {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #cccccc;
+            text-decoration: none;
+            cursor: pointer;
+            opacity: 1;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            height: 15px; /* Increased height */
+            overflow: hidden; /* Ensure inner bar stays contained */
+             position: sticky;
+             top: 60px; /* Stick below the navbar */
+             z-index: 1000;
+             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress-bar-custom {
+            width: 0%;
+            height: 100%; /* Fill the container height */
+            background-color: #28a745; /* Green for progress */
+            text-align: center;
+            line-height: 15px; /* Center text vertically */
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 5px 0 0 5px; /* Rounded corners on the left */
+            transition: width 0.5s ease-in-out;
+        }
+         /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+        footer p {
+            margin-bottom: 5px;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+         footer a:hover {
+            color: #0056b3;
+        }
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            font-size: 24px;
+            border-radius: 50%;
+            display: none; /* Hidden by default */
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s ease, opacity 0.5s ease;
+             opacity: 0.7;
+        }
+        .scroll-to-top:hover {
+             background-color: #0056b3;
+             opacity: 1;
+        }
+         /* Accordion arrow styling */
+         .step-header i.fa-chevron-down,
+         .step-header i.fa-chevron-up {
+             margin-left: auto;
+             transition: transform 0.3s ease;
+             color: #6c757d;
+         }
+         .step-header.active i.fa-chevron-down {
+             transform: rotate(180deg);
+         }
+        /* Styling for the interactive elements */
+        .interactive-area {
+            border: 2px dashed #007bff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+        .interactive-area label {
+            font-weight: bold;
+            margin-right: 10px;
+             color: #0056b3;
+        }
+        .interactive-area input[type="text"],
+        .interactive-area input[type="password"] {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 10px;
+             margin-bottom: 10px;
+        }
+        .interactive-area button {
+             margin-top: 10px;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .feedback.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .tooltip-custom {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip-custom .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+        }
+         .tooltip-custom .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .tooltip-custom:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .callout {
+             position: relative;
+             background-color: #f0f0f0;
+             padding: 15px;
+             border-radius: 5px;
+             margin: 20px 0;
+             border-left: 5px solid #17a2b8; /* Info blue */
+        }
+         .callout::before {
+             content: "\f05a"; /* Font Awesome info icon */
+             font-family: "Font Awesome 6 Free";
+             font-weight: 900;
+             color: #17a2b8;
+             margin-right: 10px;
+             font-size: 1.2em;
+         }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-invoice-dollar"></i>
+                Tutorial Pembuatan Faktur Keluaran Pajak
+            </a>
+        </div>
+    </nav>
+
+    <div class="container tutorial-container">
+
+        <h1 class="text-center mb-4" style="color: #0056b3;">Panduan Langkah-demi-Langkah</h1>
+        <p class="text-center text-muted mb-5">Tutorial ini dibuat sebagai rujukan karyawan Metropower Persada dalam penggunaan sistem Coretax oleh DJP Pajak serta pembuatan faktur perusahaan.</p>
+
+        <div class="progress-container">
+            <div class="progress-bar-custom" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step" id="step-1">
+            <div class="step-header" onclick="toggleStep(1)">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Login ke Halaman Pajak</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Pertama, akses halaman login DJP Online atau sistem Coretax yang relevan. Anda perlu memasukkan <span class="highlight">NPWP Direktur</span> (atau penanggung jawab yang terdaftar), <span class="highlight">Password</span> akun pajak, dan mengisi <span class="highlight">Captcha</span> yang ditampilkan.</p>
+                <img src="https://i.imgur.com/aJCp4pP.png" alt="Halaman Login Pajak" onclick="openModal(this.src)">
+                <div class="callout">
+                    Pastikan Anda menggunakan NPWP dan Password yang benar. Jika lupa password, dimohon untuk melapor pada departemen pajak perusahaan, jangan gunakan fitur Lupa Password. Captcha bersifat case-sensitive, perhatikan huruf besar dan kecil.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step-2">
+            <div class="step-header" onclick="toggleStep(2)">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Ganti Akses ke Wajib Pajak Perusahaan</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Setelah berhasil login dengan akun Direktur/Pengurus, Anda perlu <span class="highlight">mengubah hak akses</span> ke profil Wajib Pajak Badan (Perusahaan). Ubah hak akses seperti yang terlihat dalam screen shot berikut.</p>
+                <img src="https://i.imgur.com/UvMhakP.png" alt="Ganti Akses Wajib Pajak" onclick="openModal(this.src)">
+                <div class="important-note">
+                    <i class="fas fa-exclamation-triangle"></i> Langkah ini krusial. Pastikan Anda bekerja atas nama Wajib Pajak Perusahaan, bukan Wajib Pajak Orang Pribadi Direktur.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step-3">
+            <div class="step-header" onclick="toggleStep(3)">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Akses Menu Faktur Pajak Keluaran</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Navigasikan ke menu yang berkaitan dengan Faktur Pajak. Cari tombol di tab atas dengan nama <span class="highlight">"e-gaktur"</span>. Kemudian, cari sub menu di sisi kiri dengan nama <span class="highlight">"Pajak Keluaran"</span>.</p>
+                <img src="https://i.imgur.com/OnGshKq.png" alt="Menu Faktur Pajak Keluaran" onclick="openModal(this.src)">
+                 <div class="callout">
+                    Pajak Keluaran adalah PPN yang dipungut oleh perusahaan Anda (sebagai Penjual Kena Pajak) atas penyerahan Barang Kena Pajak (BKP) atau Jasa Kena Pajak (JKP).
+                 </div>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step-4">
+            <div class="step-header" onclick="toggleStep(4)">
+                <div class="step-number">4</div>
+                <h2 class="step-title">Refresh & Buat Faktur Pajak Baru</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Di halaman daftar Pajak Keluaran, seringkali ada baiknya melakukan <span class="highlight">"Refresh"</span> dengan tombol refresh sesuai dengan screenshot untuk memastikan daftar yang tampil adalah yang terbaru. Kalau sudah tampil tekan tombol <span class="highlight">"+ Buat Faktur"</span></p>
+                <img src="https://i.imgur.com/z3GirWu.png" alt="Refresh dan Buat Faktur Baru" onclick="openModal(this.src)">
+                 <div class="callout">
+                    Kalau tidak ada data yang muncul setelah refresh, kemungkinan anda belum mengganti Akses Pajak ke Akses Pajak Perusahaan. Mohon ikuti kembali Langkah 2.
+                 </div>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" id="step-5">
+            <div class="step-header" onclick="toggleStep(5)">
+                <div class="step-number">5</div>
+                <h2 class="step-title">Isi Detail Transaksi & Lawan Transaksi</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Pada halaman pembuatan faktur, isi bagian detail transaksi dan informasi lawan transaksi. Perhatikan kolom-kolom yang ditandai:</p>
+                <ul>
+                    <li><strong>Jenis Transaksi:</strong> Pilih sesuai sifat transaksi (misal: Kepada Pihak yang Bukan Pemungut PPN).</li>
+                    <li><strong>Detail Transaksi:</strong> Pilih jenis faktur (misal: Faktur Pajak biasa).</li>
+                    <li><strong>Tanggal Dokumen:</strong> Masukkan tanggal faktur sesuai invoice atau tanggal transaksi sebenarnya. <span class="tooltip-custom"> Penting! <i class="fas fa-info-circle"></i><span class="tooltiptext">Tanggal faktur tidak boleh mendahului tanggal Nomor Seri Faktur Pajak (NSFP) dialokasikan.</span></span></li>
+                    <li><strong>Masa Pajak & Tahun Pajak:</strong> Pilih bulan dan tahun pajak yang relevan dengan tanggal dokumen.</li>
+                    <li><strong>Nomor Seri Faktur Pajak (NSFP):</strong> Sistem biasanya akan otomatis memberikan NSFP berikutnya yang tersedia.</li>
+                    <li><strong>Identitas Lawan Transaksi:</strong> Masukkan NPWP, Nama, dan Alamat lengkap lawan transaksi (pembeli) sesuai data pada invoice atau data resmi mereka. <span class="highlight">Pastikan data ini akurat</span>.</li>
+                </ul>
+                <p>Contoh tampilan form:</p>
+                <img src="https://i.imgur.com/cFVyLMA.png" alt="Form Detail Transaksi" onclick="openModal(this.src)" style="margin-bottom: 15px;">
+                <p>Contoh form yang sudah diisi (sesuaikan dengan invoice Anda):</p>
+                <img src="https://i.imgur.com/tRs5G42.png" alt="Contoh Pengisian Detail Transaksi" onclick="openModal(this.src)">
+                <div class="important-note">
+                    <i class="fas fa-check-circle"></i> Kalau NPWP tidak ditemukan, coba tambahkan 0 di awal angka NPWP. Kalau masih belum bisa, sialhkan hubungi departemen pajak perusahaan dan catat baik baik NPWPnya. Kadang NPWP invoice berbeda dengan NPWP perusahaan.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step" id="step-6">
+            <div class="step-header" onclick="toggleStep(6)">
+                <div class="step-number">6</div>
+                <h2 class="step-title">Tambah Detail Transaksi Barang/Jasa</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Setelah mengisi informasi umum dan lawan transaksi, scroll ke bawah halaman. Anda akan menemukan bagian untuk menambahkan detail barang atau jasa yang ditransaksikan. Klik tombol <span class="highlight">"Tambah Transaksi"</span> atau "Rekam Detail Transaksi".</p>
+                <img src="https://i.imgur.com/x2D4tx0.png" alt="Tombol Tambah Transaksi" onclick="openModal(this.src)">
+            </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="step" id="step-7">
+            <div class="step-header" onclick="toggleStep(7)">
+                <div class="step-number">7</div>
+                <h2 class="step-title">Isi Detail Barang/Jasa & Perhitungan Pajak</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Di halaman/bagian tambah transaksi, isi detail barang atau jasa sesuai dengan invoice:</p>
+                <ul>
+                    <li><strong>Nama Barang/Jasa:</strong> Deskripsi barang atau jasa yang diserahkan.</li>
+                    <li><strong>Harga Satuan:</strong> Harga per unit barang/jasa sebelum PPN.</li>
+                    <li><strong>Jumlah Barang:</strong> Kuantitas barang/jasa.</li>
+                    <li><strong>Total Harga (DPP):</strong> Harga Satuan x Jumlah Barang. Ini adalah Dasar Pengenaan Pajak.</li>
+                    <li><strong>Diskon:</strong> Jika ada, masukkan nilai diskon.</li>
+                    <li><strong>PPN:</strong> Sistem biasanya akan menghitung otomatis (Tarif PPN x (Total Harga - Diskon)). Pastikan tarif PPN yang digunakan sudah benar (misal: 11%).</li>
+                    <li><strong>PPnBM:</strong> Isi jika transaksi dikenakan Pajak Penjualan atas Barang Mewah.</li>
+                </ul>
+                <p>Tampilan form tambah transaksi:</p>
+                <img src="https://i.imgur.com/jTw7LpR.png" alt="Form Tambah Detail Transaksi" onclick="openModal(this.src)" style="margin-bottom: 15px;">
+                 <p>Contoh pengisian detail transaksi:</p>
+                <img src="https://i.imgur.com/MBgFF9Y.png" alt="Contoh Pengisian Detail Transaksi Barang/Jasa" onclick="openModal(this.src)">
+                <div class="important-note warning-button">
+                    <i class="fas fa-calculator"></i> <strong>Perhatian Pajak:</strong> Perhitungan PPN (dan PPnBM jika ada) bisa bervariasi tergantung jenis transaksi, peraturan terbaru, atau fasilitas pajak yang diterima. <span class="highlight">Sangat disarankan untuk berkonsultasi dengan bagian perpajakan internal atau konsultan pajak Anda</span> untuk memastikan perhitungan sudah tepat sesuai invoice dan peraturan yang berlaku.
+                </div>
+                 <div class="callout">
+                    Anda bisa menambahkan lebih dari satu baris transaksi jika dalam satu faktur terdapat beberapa jenis barang/jasa yang berbeda.
+                 </div>
+            </div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="step" id="step-8">
+            <div class="step-header" onclick="toggleStep(8)">
+                <div class="step-number">8</div>
+                <h2 class="step-title">Simpan Konsep & Verifikasi</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Setelah semua detail transaksi barang/jasa ditambahkan, klik tombol <span class="highlight">"Simpan"</span> atau "Simpan Konsep". Faktur akan tersimpan sebagai draft.</p>
+                <img src="https://i.imgur.com/gUYSk1t.png" alt="Tombol Simpan Konsep" onclick="openModal(this.src)">
+                <div class="important-note">
+                    <i class="fas fa-search"></i> <strong>Penting:</strong> Sebelum melanjutkan ke proses Upload, <span class="highlight">sangat disarankan untuk memeriksa kembali (validasi)</span> semua data yang telah diinput pada faktur konsep ini. Cari tombol "Lihat", "Detail", atau "Ubah" di samping faktur yang baru disimpan. Pastikan tidak ada kesalahan ketik atau perhitungan.
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 9 -->
+        <div class="step" id="step-9">
+            <div class="step-header" onclick="toggleStep(9)">
+                <div class="step-number">9</div>
+                <h2 class="step-title">Upload Faktur Pajak</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Jika faktur konsep sudah diverifikasi dan benar, pilih faktur tersebut dari daftar dan klik tombol <span class="highlight">"Upload"</span>.</p>
+                <p>Anda akan diminta memasukkan <span class="highlight">Passphrase</span> (kata sandi) e-Faktur Anda. <span class="tooltip-custom">Perhatian! <i class="fas fa-key"></i><span class="tooltiptext">Passphrase ini BERBEDA dengan password login awal. Ini adalah passphrase yang Anda dapatkan saat mengajukan sertifikat elektronik.</span></span></p>
+                <img src="https://i.imgur.com/Tn3IZ7H.png" alt="Upload Faktur dengan Passphrase" onclick="openModal(this.src)">
+                <p>Setelah memasukkan passphrase, klik "Simpan" atau "Submit", lalu konfirmasikan tindakan upload.</p>
+                 <div class="interactive-area">
+                    <p><strong>Simulasi Upload:</strong></p>
+                    <label for="passphrase-9">Passphrase:</label>
+                    <input type="password" id="passphrase-9" placeholder="Masukkan Passphrase e-Faktur">
+                    <button class="action-button warning-button" onclick="simulateUpload(9)"><i class="fas fa-upload"></i> Upload Faktur</button>
+                    <div id="feedback-9" class="feedback" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 10 -->
+        <div class="step" id="step-10">
+            <div class="step-header" onclick="toggleStep(10)">
+                <div class="step-number">10</div>
+                <h2 class="step-title">Download Faktur Pajak (PDF)</h2>
+                 <i class="fas fa-chevron-down ms-auto"></i>
+            </div>
+            <div class="step-content">
+                <p>Setelah proses upload berhasil (biasanya status faktur akan berubah menjadi "Approval Sukses"), kembali ke halaman daftar Pajak Keluaran. Faktur yang baru saja diupload akan berada di posisi paling atas (atau urutkan berdasarkan tanggal terbaru).</p>
+                <p>Pilih faktur tersebut, lalu cari dan klik ikon <span class="highlight">PDF</span> atau tombol <span class="highlight">"Download"</span> / "Cetak Faktur" untuk mengunduh file Faktur Pajak dalam format PDF.</p>
+                <img src="https://i.imgur.com/TkCL57S.png" alt="Download Faktur Pajak PDF" onclick="openModal(this.src)">
+                <div class="callout">
+                    File PDF inilah yang biasanya dikirimkan ke lawan transaksi sebagai bukti pemungutan PPN. Simpan file ini dengan baik untuk arsip perpajakan Anda.
+                </div>
+                <button class="action-button"><i class="fas fa-file-pdf"></i> Download PDF (Simulasi)</button>
+            </div>
+        </div>
+
+         <div class="text-center mt-5">
+             <h3 style="color: #28a745;">Selamat! Anda Telah Menyelesaikan Tutorial.</h3>
+             <p>Anda sekarang memiliki pemahaman dasar tentang cara membuat Faktur Pajak Keluaran menggunakan sistem Coretax. Ingatlah untuk selalu merujuk pada invoice asli dan berkonsultasi dengan ahli pajak jika ragu.</p>
+         </div>
+
+    </div> <!-- End Tutorial Container -->
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title">Pratinjau Gambar</h5>
+                <span class="close-button" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Pratinjau Gambar">
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <p>&copy; 2023 Tutorial Interaktif Coretax. Dibuat sebagai panduan.</p>
+            <p>Ini bukan aplikasi resmi DJP. Selalu merujuk ke situs dan peraturan resmi Direktorat Jenderal Pajak.</p>
+            <p>Untuk informasi lebih lanjut, kunjungi <a href="https://pajak.go.id" target="_blank" rel="noopener noreferrer">www.pajak.go.id</a>.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const steps = document.querySelectorAll('.step');
+        const progressBar = document.getElementById('progressBar');
+        const totalSteps = steps.length;
+        let completedSteps = 0;
+
+        function updateProgressBar() {
+            const percentage = Math.round((completedSteps / totalSteps) * 100);
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+             progressBar.setAttribute('aria-valuenow', percentage);
+        }
+
+        function toggleStep(stepNumber) {
+            const stepElement = document.getElementById(`step-${stepNumber}`);
+            const content = stepElement.querySelector('.step-content');
+            const header = stepElement.querySelector('.step-header');
+            const icon = header.querySelector('i.fas');
+            const isActive = header.classList.contains('active');
+
+            // Close all other steps
+            // steps.forEach(s => {
+            //     if (s.id !== `step-${stepNumber}`) {
+            //         s.querySelector('.step-content').style.display = 'none';
+            //         s.querySelector('.step-header').classList.remove('active');
+            //         const otherIcon = s.querySelector('.step-header i.fas');
+            //         if (otherIcon) {
+            //             otherIcon.classList.remove('fa-chevron-up');
+            //             otherIcon.classList.add('fa-chevron-down');
+            //         }
+            //     }
+            // });
+
+
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                 header.classList.remove('active');
+                if (icon) {
+                     icon.classList.remove('fa-chevron-up');
+                     icon.classList.add('fa-chevron-down');
+                }
+            } else {
+                content.style.display = "block";
+                header.classList.add('active');
+                 if (icon) {
+                     icon.classList.remove('fa-chevron-down');
+                     icon.classList.add('fa-chevron-up');
+                 }
+                // Mark step as 'completed' conceptually when opened for the first time
+                if (!stepElement.dataset.completed) {
+                     stepElement.dataset.completed = 'true'; // Mark as completed
+                     // Find the actual number of completed steps
+                     let currentCompleted = 0;
+                     steps.forEach(s => {
+                         if(s.dataset.completed === 'true') {
+                             currentCompleted++;
+                         }
+                     });
+                     completedSteps = currentCompleted;
+                     updateProgressBar();
+                }
+                 // Scroll the opened step into view smoothly
+                 stepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+         // Initialize: Open the first step by default
+         document.addEventListener('DOMContentLoaded', () => {
+             toggleStep(1); // Open step 1 initially
+             // Set initial completed count and progress bar
+             completedSteps = 1; // Start with step 1 as 'completed'
+             updateProgressBar();
+             document.getElementById('step-1').dataset.completed = 'true';
+         });
+
+
+        // Modal Functions
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+
+        function openModal(imgSrc) {
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        // Close modal if clicked outside the image content
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Scroll to Top Button Logic
+        const scrollToTopBtn = document.querySelector('.scroll-to-top');
+
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollToTopBtn.style.display = "block";
+                 // Fade in effect
+                 setTimeout(() => { scrollToTopBtn.style.opacity = '0.7'; }, 10);
+            } else {
+                 scrollToTopBtn.style.opacity = '0';
+                 // Hide after fade out
+                setTimeout(() => { if (scrollToTopBtn.style.opacity === '0') scrollToTopBtn.style.display = "none"; }, 500);
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+         // --- Interactive Simulation Functions ---
+
+         function simulateLogin(stepNumber) {
+             const npwpInput = document.getElementById(`npwp-${stepNumber}`);
+             const passInput = document.getElementById(`pass-${stepNumber}`);
+             const captchaInput = document.getElementById(`captcha-${stepNumber}`);
+             const feedbackDiv = document.getElementById(`feedback-${stepNumber}`);
+
+             // Simple validation simulation
+             if (npwpInput.value && passInput.value && captchaInput.value) {
+                 feedbackDiv.textContent = "Login Berhasil (Simulasi)! Melanjutkan ke langkah berikutnya...";
+                 feedbackDiv.className = 'feedback success';
+                 feedbackDiv.style.display = 'block';
+                 // Automatically open the next step after a short delay
+                 setTimeout(() => {
+                     toggleStep(stepNumber); // Close current step
+                     toggleStep(stepNumber + 1); // Open next step
+                 }, 1500);
+             } else {
+                 feedbackDiv.textContent = "Login Gagal (Simulasi): Harap isi semua field.";
+                 feedbackDiv.className = 'feedback error';
+                 feedbackDiv.style.display = 'block';
+             }
+         }
+
+         function simulateUpload(stepNumber) {
+             const passphraseInput = document.getElementById(`passphrase-${stepNumber}`);
+             const feedbackDiv = document.getElementById(`feedback-${stepNumber}`);
+
+             if (passphraseInput.value) { // Simulate successful upload if passphrase is entered
+                 feedbackDiv.textContent = "Upload Faktur Berhasil (Simulasi)! Status: Approval Sukses.";
+                 feedbackDiv.className = 'feedback success';
+                 feedbackDiv.style.display = 'block';
+                 setTimeout(() => {
+                     toggleStep(stepNumber); // Close current step
+                     toggleStep(stepNumber + 1); // Open next step
+                 }, 1500);
+             } else {
+                 feedbackDiv.textContent = "Upload Gagal (Simulasi): Passphrase tidak boleh kosong.";
+                 feedbackDiv.className = 'feedback error';
+                 feedbackDiv.style.display = 'block';
+             }
+         }
+
+    </script>
+
+</body>
+</html>
